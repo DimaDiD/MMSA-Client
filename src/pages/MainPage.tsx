@@ -9,41 +9,46 @@ import randomColor from "randomcolor";
 import leftBrace from "../Photos/LeftBrace.png";
 import operator from "../Photos/Operator.png";
 import MainTable from '../components/MainTable';
+import notificationLogic from "../components/notification";
 
 const { Header, Content } = Layout;
 
 export const MainPage = () => {
-    let api = new CalculationService();
+    let Api = new CalculationService();
     const [state, actions] = useTable();
     const [form] = Form.useForm();
 
-    const makeCalculations = async (values: any) => {    
-        let v = values.g
-        let c = v.split(',')
+    const makeCalculations = async (values: any) => {                   
+          let operatorValues = values.g.split(',')
 
-        const newCalculationSettings = {
-          InputFunction: encodeURIComponent(values.inputFunction),
-          OperatorValues: [encodeURIComponent(c[0]), encodeURIComponent(c[1])],
-          Operators: [encodeURIComponent(values.Operator1), encodeURIComponent(values.Operator2)],
-          Scopes: [encodeURIComponent(values.Scope1), encodeURIComponent(values.Scope2)],
-          LeftSide: encodeURIComponent(values.leftSide),
-          RightSide: encodeURIComponent(values.rigthSide)
-          };   
+          const newCalculationSettings = {
+            InputFunction: encodeURIComponent(values.inputFunction),
+            OperatorValues: [encodeURIComponent(operatorValues[0]), encodeURIComponent(operatorValues[1])],
+            Operators: [encodeURIComponent(values.Operator1), encodeURIComponent(values.Operator2)],
+            Scopes: [encodeURIComponent(values.Scope1), encodeURIComponent(values.Scope2)],
+            LeftSide: encodeURIComponent(values.leftSide),
+            RightSide: encodeURIComponent(values.rigthSide)
+            };   
 
-          await api.makeClaculation(newCalculationSettings)
-          .then((res) => {    
-            let mu = res.mu.reverse()
-            mu.shift() 
-            const filteredArray = res.plotFXi.filter((item: any) => Array.isArray(item) && item.length > 0);
-            MakeColumns(mu);
-            actions.setTableValues(mu)
-            actions.setFunctionValues(filteredArray)
-            actions.setGraphXis(res.plotXi)                        
-          });          
-          
-          
+            await Api.makeClaculation(newCalculationSettings)
+            .then((res) => { 
+              if(res.error === true){
+                actions.setCalculationError(res.error)
+                notificationLogic("error", "Помилка. Перевірте введені дані!!!!")
+              } 
+              else{  
+                notificationLogic("success", "Обчислення завершено!")
+                actions.setCalculationError(res.error)   
+                let mu = res.mu.reverse()
+                mu.shift() 
+                const filteredArray = res.plotFXi.filter((item: any) => Array.isArray(item) && item.length > 0);
+                MakeColumns(mu);
+                actions.setTableValues(mu)
+                actions.setFunctionValues(filteredArray)
+                actions.setGraphXis(res.plotXi)   
+              }                     
+            }); 
       };
-    
     
     const MakeColumns = async (tableValues: any[][]) => {    
       const newColumns: any = [
@@ -102,14 +107,14 @@ export const MainPage = () => {
               <Row justify={'center'}>                
                 <img src={operator} alt="" className="curly-brace-left"/>
               </Row>
-              <Row>
+              <Row style={{height: "75px"}}>
                 <Form.Item
                   label="a"
                   name="leftSide"
                   rules={[
                     {
                       required: true,
-                      message: "Поле є пустим!",
+                      message: "Поле є порожнім!",
                     }]}
                 >
                 <Input                
@@ -124,7 +129,7 @@ export const MainPage = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Поле є пустим!",
+                      message: "Поле є порожнім!",
                     }]}
                   >
                 <Input                
@@ -141,7 +146,7 @@ export const MainPage = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Поле є пустим!",
+                      message: "Поле є порожнім!",
                     }]}
                 >                
                 <Input                
@@ -154,16 +159,18 @@ export const MainPage = () => {
               <div style={{display:"flex", alignItems:"center"}}>
                 <div style={{fontSize: "50px", display:"block"}}>=</div>
               </div>
-              <img src={leftBrace} alt="" className="curly-brace-left"/>
+              <div style={{display:"flex", alignItems:"center"}}>
+                <img src={leftBrace} alt="" className="curly-brace-left"/>
+              </div>
               <div style={{ display:"flex", flexDirection:"column", width:"70%"}}>
-                <div style={{display:"flex", flexDirection:"row", height:"50%", verticalAlign:"center"}}>
+                <div style={{display:"flex", flexDirection:"row", height:"82px", verticalAlign:"center"}}>
                   <div style={{width:"60%"}}>
                   <Form.Item
                     name="Operator1"
                       rules={[
                       {
                         required: true,
-                        message: "Поле є пустим!",
+                        message: "Поле є порожнім!",
                       }]}
                     >
                     <Input                
@@ -180,7 +187,7 @@ export const MainPage = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Поле є пустим!",
+                      message: "Поле є порожнім!",
                     }]}
                   >
                   <Input                
@@ -190,14 +197,14 @@ export const MainPage = () => {
                   </Form.Item>
                 </div>
               </div>
-              <div style={{display:"flex", flexDirection:"row",  height:"50%"}}>
+              <div style={{display:"flex", flexDirection:"row",  height:"82px"}}>
                 <div style={{width:"60%"}}>
                   <Form.Item
                     name="Operator2"
                     rules={[
                       {
                         required: true,
-                        message: "Поле є пустим!",
+                        message: "Поле є порожнім!",
                       }]}
                   >
                   <Input                
@@ -214,7 +221,7 @@ export const MainPage = () => {
                     rules={[
                       {
                         required: true,
-                        message: "Поле є пустим!",
+                        message: "Поле є порожнім!",
                       }]}
                   >                
                   <Input                
@@ -226,14 +233,14 @@ export const MainPage = () => {
               </div>
               </div>              
               </Row>
-              <Row justify={'center'} style={{height: "75px", fontWeight: '600', fontSize: '70px'  }}>                
+              <Row justify={'center'} style={{height: "82px", fontWeight: '600', fontSize: '70px', }}>                
                 <Form.Item
                   label="Початкова функція"
                   name="inputFunction"
                   rules={[
                   {
                     required: true,
-                    message: "Поле є пустим!",
+                    message: "Поле є порожнім!",
                   }]}
                 >
                   <Input                
@@ -252,6 +259,8 @@ export const MainPage = () => {
               </Form.Item>  
               </div>          
         </Form>
+        {state.calculationError === false ? (
+          <>
         { (state.dataTable!.length !== 0 && state.columns!.length !== 0) &&        
           <MainTable/>
         }
@@ -271,6 +280,11 @@ export const MainPage = () => {
             )
           }) 
           }</div>
+          
+          </>)
+        :        
+        <></>
+        }
         </Content>
 
         <Button className='scroll-to-top-button' icon={<UpOutlined style={{color: "rgb(63, 96, 121)"}}/>} onClick={scrollToTop}/>

@@ -4,18 +4,18 @@ type State = {
     tableValues: number[][],
     graphXis: any,
     functionValues: number[][][],
-    showMenu: boolean,
     dataTable: any[],
     columns: any[]
+    calculationError: boolean
 };
 
 const initialState: State = {
     tableValues: [[]],
     graphXis: [],
     functionValues: [[[]]],
-    showMenu: false,
     dataTable: [],
-    columns: []
+    columns: [],
+    calculationError: false
 };
 
 const actions = {
@@ -50,20 +50,20 @@ const actions = {
         functionValues: functionValue
       });
     },
-
-  setShowMenu:
-    (isShow: boolean): Action<State> =>
-    ({ setState }) => {
-      setState({
-        showMenu: isShow
-      });
-    },
   
   setDataTable:
     (newData: any[]): Action<State> =>
     ({ setState }) => {
       setState({
         dataTable: newData
+      });
+    },
+
+  setCalculationError:
+    (isError: boolean): Action<State> =>
+    ({ setState }) => {
+      setState({
+        calculationError: isError
       });
     }
 };

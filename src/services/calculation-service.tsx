@@ -48,10 +48,4 @@ export default class CalculationService {
           })
       ).data;
     };
-    // downloadTable = async (
-    //   newData: TableData
-    // ) => {
-    //   console.log(newData)
-    //   return (await Api.get(`Calculation/GetFile`,newData)).data;
-    // };
 }

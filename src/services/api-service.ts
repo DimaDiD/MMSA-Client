@@ -7,8 +7,6 @@ interface HttpResponse {
   data: any;
 }
 
-
-
 const get = async (url: string, data?: any, paramsSerializer?: any): Promise<HttpResponse> => {
   const response = await axios.get(BASE_URL + url, {
     params: data,

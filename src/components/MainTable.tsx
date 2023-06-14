@@ -24,7 +24,7 @@ const MainTable = () => {
         }
 
         await api.downloadTable(newTableData)
-            .then((res) => {    
+            .then((res) => {               
               const excelBytes = atob(res);
               const arrayBuffer = new ArrayBuffer(excelBytes.length);
               const view = new Uint8Array(arrayBuffer);
