@@ -10,6 +10,7 @@ import leftBrace from "../Photos/LeftBrace.png";
 import operator from "../Photos/Operator.png";
 import MainTable from '../components/MainTable';
 import notificationLogic from "../components/notification";
+import React from "react";
 
 const { Header, Content } = Layout;
 
